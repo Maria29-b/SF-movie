@@ -53,18 +53,26 @@
         L.marker([37.773972, -122.431297]).addTo(map).bindPopup('San Francisco').openPopup();
 
 
-    </script>
 
-    <!-- <script>
         const dataTable = []
-        fetch("./data.json")
+
+        fetch("data.json")
         .then((response)=>response.json())
         .then((result)=>{
-            dataTable = result
-            console.log(result)
+           
+            result.forEach(film=>{
+                if (film.lat && film.lng){
+                    L.marker([film.lat,film.lng]).addTo(map).bindPopup(film.location).openPopup();
+                }
+
+
+            });
         })
         .catch((error)=>console.log("shit happened ", error)) 
-    </script> -->
+film
+    </script>
+
+    
 </body>
 
 </html>
