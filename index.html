@@ -15,6 +15,10 @@
 
 
     <style>
+        body {
+            background-color: rgba(181, 239, 239, 0.365);
+        }
+
         #searchBar {
             display: flex;
             flex-direction: column;
@@ -47,7 +51,7 @@
     <div class="container-fluid" id="main">
         <div id="searchBar">
 
-            <input type="text" placeholder="Type the film title ..." id="text">
+            <input type="text" placeholder="Type the film title ..." id="text" list="filmList">
             <datalist id="filmList"></datalist>
             <button id="searchbtn">Search</button>
         </div>
@@ -62,15 +66,15 @@
     <script>
 
 
-        var map = L.map('map').setView([37.773972, -122.431297], 7);
+        var map = L.map('map').setView([37.773972, -122.431297], 13);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        L.marker([37.773972, -122.431297]).addTo(map).bindPopup('San Francisco').openPopup();
+        //L.marker([37.773972, -122.431297]).addTo(map).bindPopup('San Francisco').openPopup();
 
-
+        let markers = new L.LayerGroup().addTo(map);
 
         let dataTable = [];
 
@@ -84,16 +88,22 @@
                     if (film.lat && film.lng) {
                         let lat = parseFloat(film.lat);
                         let lng = parseFloat(film.lng);
-                        let marker = L.marker([lat, lng]).addTo(map)
-                            .bindTooltip(film.title)
+
+                        console.log(lat, lng)
+                        //console.log(`film:${film.title}`);
+
+
+                        let marker = L.marker([lat, lng]).bindTooltip(film.title)
                             .bindPopup(`<b>${film.title}</b><br>Year :${film.release_year} <br>Director: ${film.director} <br> Actor 1: ${film.actor_1} <br> Actor 2: ${film.actor_2} <br> Actor 3: ${film.actor_3} <br> company : ${film.production_company}`)
-                            ; //.bindPopup(film.title);
-                        // let MarkersGroup=addLayer(marker);
+                            ;
+
+                            console.log(lat , lng , film.title);
+
+                            
+                            markers.addLayer(marker);
 
                     }
-                    //  position.addTo(map);
-                    //  .bindPopup(`<b>${film.locations}</b>`);
-                    //.openPopup()
+
                 });
 
                 let datalist = document.getElementById("filmList");
@@ -105,8 +115,31 @@
                         datalist.appendChild(option);
 
 
-                    };
+                    }
                 });
+
+                document.getElementById("searchbtn").addEventListener("click", () => {
+                    let searchValue = document.getElementById("text").value.toLowerCase();
+                    let foundFilm = dataTable.find(film => film.title.toLowerCase() === searchValue);
+                    markers.clearLayers();
+
+                    if (foundFilm) {
+
+                        let lat = parseFloat(foundFilm.lat);
+                        let lng = parseFloat(foundFilm.lng);
+
+                        let marker = L.marker([lat, lng]).bindTooltip(foundFilm.title);
+
+
+                        map.setView([lat, lng], 10);
+                        markers.addLayer(marker);
+
+                    } else {
+                        alert("Film not found");
+                    }
+                }
+                )
+
 
 
 
