@@ -43,6 +43,20 @@
 
 
         }
+        .leaflet-popup-content{
+            font-size: 14px;
+            color: #1f1d1d;
+            text-align: left;
+            padding: 5px;
+        }
+        .leaflet-popup-content b{
+            font-size: 16px;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+       
+
     </style>
 </head>
 
@@ -129,7 +143,18 @@
                         let lng = parseFloat(foundFilm.lng);
 
                         let marker = L.marker([lat, lng]).bindTooltip(foundFilm.title)
-                            .bindPopup(`<b>${foundFilm.title}</b><br>Actor 1: ${foundFilm.actor_1}<br>Actor 2 : ${foundFilm.actor_2}<br>Actor 3: ${foundFilm.actor_3}<br>Director : ${foundFilm.director}<br>distributor :${foundFilm.distributor}<br>Location : ${foundFilm.location}<br> Prduction Company : ${foundFilm.production_company}<br>Release year : ${foundFilm.release_year}<br>writer : ${foundFilm.writer}<br>Lng :${foundFilm.lng}<br>Lat:${foundFilm.lat}`);
+                            .bindPopup(`<b>${foundFilm.title}</b><br>
+                            <strong>Actor 1 :</strong>${foundFilm.actor_1}<br>
+                            <strong>Actor 2 :</strong> ${foundFilm.actor_2}<br>
+                            <strong>Actor 3 :</strong>${foundFilm.actor_3}<br>
+                            <strong>Director :</strong>${foundFilm.director}<br>
+                            <strong>distributor :</strong>${foundFilm.distributor}<br>
+                            <strong>Location :</strong>${foundFilm.location}<br>
+                            <strong>Prduction Company :</strong>${foundFilm.production_company}<br>
+                            <strong>Release year :</strong>${foundFilm.release_year}<br>
+                            <strong>writer :</strong>${foundFilm.writer}<br>
+                            <strong>Lng :</strong>${foundFilm.lng}<br>
+                            <strong>Lat :</strong>${foundFilm.lat}`);
                         map.setView([lat, lng], 15);
                         markers.addLayer(marker);
 
