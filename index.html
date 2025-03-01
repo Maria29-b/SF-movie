@@ -97,10 +97,10 @@
                             .bindPopup(`<b>${film.title}</b><br>Year :${film.release_year} <br>Director: ${film.director} <br> Actor 1: ${film.actor_1} <br> Actor 2: ${film.actor_2} <br> Actor 3: ${film.actor_3} <br> company : ${film.production_company}`)
                             ;
 
-                            console.log(lat , lng , film.title);
+                        console.log(lat, lng, film.title);
 
-                            
-                            markers.addLayer(marker);
+
+                        markers.addLayer(marker);
 
                     }
 
@@ -128,10 +128,9 @@
                         let lat = parseFloat(foundFilm.lat);
                         let lng = parseFloat(foundFilm.lng);
 
-                        let marker = L.marker([lat, lng]).bindTooltip(foundFilm.title);
-
-
-                        map.setView([lat, lng], 10);
+                        let marker = L.marker([lat, lng]).bindTooltip(foundFilm.title)
+                            .bindPopup(`<b>${foundFilm.title}</b><br>Actor 1: ${foundFilm.actor_1}<br>Actor 2 : ${foundFilm.actor_2}<br>Actor 3: ${foundFilm.actor_3}<br>Director : ${foundFilm.director}<br>distributor :${foundFilm.distributor}<br>Location : ${foundFilm.location}<br> Prduction Company : ${foundFilm.production_company}<br>Release year : ${foundFilm.release_year}<br>writer : ${foundFilm.writer}<br>Lng :${foundFilm.lng}<br>Lat:${foundFilm.lat}`);
+                        map.setView([lat, lng], 15);
                         markers.addLayer(marker);
 
                     } else {
@@ -139,12 +138,6 @@
                     }
                 }
                 )
-
-
-
-
-
-
 
 
                 console.log(result);
