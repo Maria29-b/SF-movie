@@ -43,20 +43,20 @@
 
 
         }
-        .leaflet-popup-content{
+
+        .leaflet-popup-content {
             font-size: 14px;
             color: #1f1d1d;
             text-align: left;
             padding: 5px;
         }
-        .leaflet-popup-content b{
+
+        .leaflet-popup-content b {
             font-size: 16px;
             color: #007bff;
             text-align: center;
             margin-bottom: 15px;
         }
-       
-
     </style>
 </head>
 
@@ -89,85 +89,70 @@
         //L.marker([37.773972, -122.431297]).addTo(map).bindPopup('San Francisco').openPopup();
 
         let markers = new L.LayerGroup().addTo(map);
-
         let dataTable = [];
+
+
+
+        function addMarkers() {
+            markers.clearLayers();
+            dataTable.forEach(film => {
+                if (film.lat && film.lng) {
+                    let marker = createMarker(film);
+                    markers.addLayer(marker);
+                }
+            })
+        }
+        function createMarker(film) {
+            let lat = parseFloat(film.lat);
+            let lng = parseFloat(film.lng);
+            let ShowContent = `<b>${film.title}</b><br>
+            Year :${film.release_year} <br>
+            Director: ${film.director} <br>
+             Actor 1: ${film.actor_1} <br>
+             Actor 2: ${film.actor_2} <br>
+             Actor 3: ${film.actor_3} <br>
+             company : ${film.production_company}`;
+            return L.marker([lat, lng]).bindTooltip(film.title).bindPopup(ShowContent);
+        }
+
+
+        function CreateDataList() {
+            let dataList = document.getElementById("filmList");
+
+            dataTable.forEach(film => {
+                if (film.title) {
+                    let option = document.createElement("option");
+                    option.value = film.title;
+                    dataList.appendChild(option);
+                }
+            })
+
+        }
+
+        function searchFilm() {
+            let searchValue = document.getElementById("text").value.toLowerCase();
+            let foundFilm = dataTable.find(film => film.title.toLowerCase() === searchValue);
+            markers.clearLayers();
+
+            if (foundFilm) {
+                let marker = createMarker(foundFilm);
+                markers.addLayer(marker);
+                map.setView([parseFloat(foundFilm.lat), parseFloat(foundFilm.lng)], 15);
+            } else {
+                alert("film not found");
+            }
+        }
+
+
+        document.getElementById("searchbtn").addEventListener("click", searchFilm);
 
         fetch("./data.json")
             .then((response) => response.json())
             .then((result) => {
                 dataTable = result;
-
-
-                dataTable.forEach(film => {
-                    if (film.lat && film.lng) {
-                        let lat = parseFloat(film.lat);
-                        let lng = parseFloat(film.lng);
-
-                        console.log(lat, lng)
-                        //console.log(`film:${film.title}`);
-
-
-                        let marker = L.marker([lat, lng]).bindTooltip(film.title)
-                            .bindPopup(`<b>${film.title}</b><br>Year :${film.release_year} <br>Director: ${film.director} <br> Actor 1: ${film.actor_1} <br> Actor 2: ${film.actor_2} <br> Actor 3: ${film.actor_3} <br> company : ${film.production_company}`)
-                            ;
-
-                        console.log(lat, lng, film.title);
-
-
-                        markers.addLayer(marker);
-
-                    }
-
-                });
-
-                let datalist = document.getElementById("filmList");
-                dataTable.forEach(film => {
-
-                    if (film.title) {
-                        let option = document.createElement("option");
-                        option.value = film.title;
-                        datalist.appendChild(option);
-
-
-                    }
-                });
-
-                document.getElementById("searchbtn").addEventListener("click", () => {
-                    let searchValue = document.getElementById("text").value.toLowerCase();
-                    let foundFilm = dataTable.find(film => film.title.toLowerCase() === searchValue);
-                    markers.clearLayers();
-
-                    if (foundFilm) {
-
-                        let lat = parseFloat(foundFilm.lat);
-                        let lng = parseFloat(foundFilm.lng);
-
-                        let marker = L.marker([lat, lng]).bindTooltip(foundFilm.title)
-                            .bindPopup(`<b>${foundFilm.title}</b><br>
-                            <strong>Actor 1 :</strong>${foundFilm.actor_1}<br>
-                            <strong>Actor 2 :</strong> ${foundFilm.actor_2}<br>
-                            <strong>Actor 3 :</strong>${foundFilm.actor_3}<br>
-                            <strong>Director :</strong>${foundFilm.director}<br>
-                            <strong>distributor :</strong>${foundFilm.distributor}<br>
-                            <strong>Location :</strong>${foundFilm.location}<br>
-                            <strong>Prduction Company :</strong>${foundFilm.production_company}<br>
-                            <strong>Release year :</strong>${foundFilm.release_year}<br>
-                            <strong>writer :</strong>${foundFilm.writer}<br>
-                            <strong>Lng :</strong>${foundFilm.lng}<br>
-                            <strong>Lat :</strong>${foundFilm.lat}`);
-                        map.setView([lat, lng], 15);
-                        markers.addLayer(marker);
-
-                    } else {
-                        alert("Film not found");
-                    }
-                }
-                )
-
-
-                console.log(result);
+                addMarkers();
+                CreateDataList();
             })
-
 
             .catch((error) => console.log("shit happened ", error))
 
