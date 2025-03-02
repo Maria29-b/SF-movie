@@ -16,7 +16,14 @@
 
     <style>
         body {
-            background-color: rgba(181, 239, 239, 0.365);
+            background-color: rgba(8, 119, 255, 0.107);
+        }
+
+        #map {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            ;
+
         }
 
         #searchBar {
@@ -25,6 +32,7 @@
             align-items: center;
             margin: 40px;
             padding: 5px;
+
         }
 
         #text {
@@ -32,14 +40,24 @@
             height: 50px;
             padding: 10px;
             margin: 10px;
+            border: 2px solid #0077f65d;
             border-radius: 10px;
+            transition: 0.3s;
+
+
 
         }
 
         #searchbtn {
             width: 80px;
             border-radius: 10px;
+            background-color: #0c85ff41;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
+        #searchbtn:hover {
+            background-color: #0056B3;
 
 
         }
@@ -53,7 +71,7 @@
 
         .leaflet-popup-content b {
             font-size: 16px;
-            color: #007bff;
+            color: #0263cb;
             text-align: center;
             margin-bottom: 15px;
         }
@@ -86,7 +104,6 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        //L.marker([37.773972, -122.431297]).addTo(map).bindPopup('San Francisco').openPopup();
 
         let markers = new L.LayerGroup().addTo(map);
         let dataTable = [];
@@ -118,7 +135,7 @@
 
         function CreateDataList() {
             let dataList = document.getElementById("filmList");
-
+            dataList.innerHTML = "";
             dataTable.forEach(film => {
                 if (film.title) {
                     let option = document.createElement("option");
@@ -143,6 +160,25 @@
             }
         }
 
+        function autocompleteText() {
+            document.getElementById("text").addEventListener("input", function () {
+                let searchValue = this.value.toLowerCase();
+                let datalist = document.getElementById("filmList");
+                datalist.innerHTML = "";
+
+                if (searchValue.length > 0) {
+
+                    dataTable.forEach(film => {
+
+                        if (film.title.toLowerCase().includes(searchValue)) {
+                            let option = document.createElement("option");
+                            option.value = film.title;
+                            datalist.appendChild(option);
+                        }
+                    });
+                }
+            });
+        }
 
         document.getElementById("searchbtn").addEventListener("click", searchFilm);
 
@@ -152,6 +188,7 @@
                 dataTable = result;
                 addMarkers();
                 CreateDataList();
+
             })
 
             .catch((error) => console.log("shit happened ", error))
