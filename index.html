@@ -140,6 +140,7 @@
                 if (film.title) {
                     let option = document.createElement("option");
                     option.value = film.title;
+                
                     dataList.appendChild(option);
                 }
             })
@@ -164,6 +165,15 @@
 
         document.getElementById("searchbtn").addEventListener("click", searchFilm);
 
+
+        document.getElementById("text").addEventListener("input", function () {
+
+            if (this.value === "") {
+           location.reload(); 
+               
+            }
+        }
+        )
         fetch("./data.json")
             .then((response) => response.json())
             .then((result) => {
